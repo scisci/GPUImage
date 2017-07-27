@@ -77,6 +77,7 @@
 - (void)updateDataFromBytes:(GLubyte *)bytesToUpload size:(CGSize)imageSize;
 {
     uploadedImageSize = imageSize;
+    scaledOutputImageSize = imageSize;
 
     [self uploadBytes:bytesToUpload];
 }
@@ -105,9 +106,14 @@
 	});
 }
 
+- (void)setOutputImageSize:(CGSize)imageSize
+{
+    scaledOutputImageSize = imageSize;
+}
+
 - (CGSize)outputImageSize;
 {
-    return uploadedImageSize;
+    return scaledOutputImageSize;
 }
 
 @end

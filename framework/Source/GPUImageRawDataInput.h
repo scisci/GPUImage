@@ -19,6 +19,7 @@ typedef enum {
 @interface GPUImageRawDataInput : GPUImageOutput
 {
     CGSize uploadedImageSize;
+    CGSize scaledOutputImageSize;
 	
 	dispatch_semaphore_t dataUpdateSemaphore;
 }
@@ -36,6 +37,7 @@ typedef enum {
 // Image rendering
 - (void)updateDataFromBytes:(GLubyte *)bytesToUpload size:(CGSize)imageSize;
 - (void)processData;
+- (void)setOutputImageSize:(CGSize)imageSize;
 - (CGSize)outputImageSize;
 
 @end
