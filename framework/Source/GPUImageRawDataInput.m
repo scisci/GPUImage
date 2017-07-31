@@ -77,7 +77,6 @@
 - (void)updateDataFromBytes:(GLubyte *)bytesToUpload size:(CGSize)imageSize;
 {
     uploadedImageSize = imageSize;
-    scaledOutputImageSize = imageSize;
 
     [self uploadBytes:bytesToUpload];
 }
