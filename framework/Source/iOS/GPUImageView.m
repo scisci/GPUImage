@@ -384,6 +384,18 @@
     });
 }
 
+- (void)flush {
+    runSynchronouslyOnVideoProcessingQueue(^{
+        [GPUImageContext setActiveShaderProgram:displayProgram];
+        [self setDisplayFramebuffer];
+        
+        glClearColor(backgroundColorRed, backgroundColorGreen, backgroundColorBlue, backgroundColorAlpha);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        [self presentFramebuffer];
+    });
+}
+
 - (NSInteger)nextAvailableTextureIndex;
 {
     return 0;
@@ -417,6 +429,7 @@
         }
     });
 }
+
 
 - (CGSize)maximumOutputSize;
 {
