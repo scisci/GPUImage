@@ -129,14 +129,22 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (object == self && [keyPath isEqualToString:@"frame"] && (!CGSizeEqualToSize(self.bounds.size, CGSizeZero)))
+    if (object == self && [keyPath isEqualToString:@"frame"])
     {
-        runSynchronouslyOnVideoProcessingQueue(^{
-            [self destroyDisplayFramebuffer];
-            [self createDisplayFramebuffer];
-            [self recalculateViewGeometry];
-        });
+        [self updateFrameImmediate];
     }
+}
+
+- (void)updateFrameImmediate {
+    if (CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
+        return;
+    }
+    
+    runSynchronouslyOnVideoProcessingQueue(^{
+        [self destroyDisplayFramebuffer];
+        [self createDisplayFramebuffer];
+        [self recalculateViewGeometry];
+    });
 }
 
 - (void)dealloc

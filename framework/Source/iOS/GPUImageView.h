@@ -39,4 +39,6 @@ typedef enum {
 
 - (void)flush;
 
+- (void)updateFrameImmediate;
+
 @end
