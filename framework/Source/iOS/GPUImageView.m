@@ -10,6 +10,7 @@
 
 @interface GPUImageView () 
 {
+    CGRect storedBounds;
     GLuint inputTextureForDisplay;
     GLuint displayRenderbuffer, displayFramebuffer;
     
@@ -141,6 +142,7 @@
     }
     
     runSynchronouslyOnVideoProcessingQueue(^{
+        storedBounds = self.bounds;
         [self destroyDisplayFramebuffer];
         [self createDisplayFramebuffer];
         [self recalculateViewGeometry];
@@ -190,7 +192,7 @@
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, displayRenderbuffer);
 	
     GLuint framebufferCreationStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    NSAssert(framebufferCreationStatus == GL_FRAMEBUFFER_COMPLETE, @"Failure with display framebuffer generation for display of size: %f, %f", self.bounds.size.width, self.bounds.size.height);
+    NSAssert(framebufferCreationStatus == GL_FRAMEBUFFER_COMPLETE, @"Failure with display framebuffer generation for display of size: %f, %f", storedBounds.size.width, storedBounds.size.height);
 }
 
 - (void)destroyDisplayFramebuffer;
@@ -236,12 +238,12 @@
     runSynchronouslyOnVideoProcessingQueue(^{
         CGFloat heightScaling, widthScaling;
         
-        CGSize currentViewSize = self.bounds.size;
+        CGSize currentViewSize = storedBounds.size;
         
         //    CGFloat imageAspectRatio = inputImageSize.width / inputImageSize.height;
         //    CGFloat viewAspectRatio = currentViewSize.width / currentViewSize.height;
         
-        CGRect insetRect = AVMakeRectWithAspectRatioInsideRect(inputImageSize, self.bounds);
+        CGRect insetRect = AVMakeRectWithAspectRatioInsideRect(inputImageSize, storedBounds);
         
         switch(_fillMode)
         {
@@ -443,12 +445,12 @@
 {
     if ([self respondsToSelector:@selector(setContentScaleFactor:)])
     {
-        CGSize pointSize = self.bounds.size;
+        CGSize pointSize = storedBounds.size;
         return CGSizeMake(self.contentScaleFactor * pointSize.width, self.contentScaleFactor * pointSize.height);
     }
     else
     {
-        return self.bounds.size;
+        return storedBounds.size;
     }
 }
 
